@@ -1,7 +1,7 @@
 
-#define SERIAL_STATUS 1
+#define SERIAL_STATUS 0
 #define SERIAL_VCC_STATUS 0
-#define SERIAL_DISTANCE_STATUS 1
+#define SERIAL_DISTANCE_STATUS 0
 
 #define builtInLED 13                   // Arduino Nano built-in LED (test purpose only)
 
@@ -13,6 +13,7 @@
 
 // buttons configuration
 #define BUTTON_1 6                      // first button lamp/voltage
+#define BUTTON_2 7
 // power button + diode? 
 
 

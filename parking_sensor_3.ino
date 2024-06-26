@@ -14,6 +14,10 @@ unsigned long longestLoopTime;
 unsigned long loopTime;
 uint8_t lampCounter;
 uint8_t lampFlag;
+
+volatile uint8_t button1Flag;
+volatile uint8_t button2Flag;
+volatile uint8_t buttonSelect = 1;
 volatile uint8_t button1State;
 volatile uint8_t button2State;
 
@@ -71,6 +75,7 @@ void setup() {
 
   pinMode(TEST_LED, OUTPUT);
   pinMode(BUTTON_1, INPUT_PULLUP);
+  pinMode(BUTTON_2, INPUT_PULLUP);
   
 }
 
@@ -97,15 +102,31 @@ void loop() {
 
   
   // read button state
-  readButtonState(BUTTON_1, &button1State);
+//readButtonState(BUTTON_1, &button1State, &button1Flag);
+
+  if (buttonSelect == 1) {
+    readButtonState(BUTTON_1, &button1State, &button1Flag);
+    
+    if (!button1Flag) buttonSelect = 2;
+  }
+  else if (buttonSelect = 2) {
+    readButtonState(BUTTON_2, &button2State, &button2Flag);
+    if (!button2Flag) buttonSelect = 1;
+  }
+ 
   
   // measure distance 
-  distance = f_measure_distance();
-  
+  // distance = f_measure_distance();
+
+  if (button1State == 1) mode = lamp;
+  else if (button1State == 2);
+
+  if (button2State == 1) mode = voltageTest;
+  else if (button2State == 2);  
   
   // change mode if button short or long press is detected
-  if (button1State == 1 ) mode = lamp;
-  else if (button1State == 2 ) mode = voltageTest;
+  //if (button1State == 1 ) mode = lamp;
+  //else if (button1State == 2 ) mode = voltageTest;
   
   
   
@@ -312,6 +333,7 @@ if (mode == lamp) {
   // clear buttons' state  
   
   button1State = 0;
+  button2State = 0; 
   loopTime = millis() - startTimestamp;
   if (longestLoopTime < loopTime) longestLoopTime = loopTime;
   //Serial.println(loopTime);

@@ -8,7 +8,7 @@ extern Adafruit_NeoPixel stripLED;
 void distance_init(void);
 uint16_t f_measure_distance(void);
 uint16_t measure_distance(void);
-void readButtonState(uint8_t buttonPin, uint8_t *buttonStateReturn);
+void readButtonState(uint8_t buttonPin, uint8_t *buttonStateReturn, uint8_t *buttonFlag);
 void timer2_init(void);
 
 void display_level(uint8_t ledNumber, uint8_t luminosity, char color);

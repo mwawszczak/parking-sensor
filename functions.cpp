@@ -15,7 +15,7 @@ void timer2_init(void) {
 }
 
 
-void readButtonState(uint8_t buttonPin, uint8_t *buttonStateReturn) {
+void readButtonState(uint8_t buttonPin, uint8_t *buttonStateReturn, uint8_t *buttonFlag) {
   static unsigned long currentMillis;
   static unsigned long previousButtonMillis;
   static unsigned long buttonPressDuration;
@@ -39,8 +39,10 @@ void readButtonState(uint8_t buttonPin, uint8_t *buttonStateReturn) {
     if (buttonState == HIGH && buttonStatePrevious == LOW && !buttonStateLongPress) {
       buttonLongPressMillis = currentMillis;
       buttonStatePrevious = HIGH;
+      *buttonFlag = 1;
       #if (SERIAL_DEBUGGING_ENABLE == 1)
       Serial.println("button pressed");
+
       #endif
 
     }
@@ -53,6 +55,7 @@ void readButtonState(uint8_t buttonPin, uint8_t *buttonStateReturn) {
     //czy czas wciśnięcia przycisku jest dłuższy nić treshhold minButtonLongPressDuration
     if (buttonState == HIGH && !buttonStateLongPress && buttonPressDuration >= minButtonLongPressDuration) {
       buttonStateLongPress = true;
+      
       #if (SERIAL_DEBUGGING_ENABLE == 1)
       Serial.println("Button long press");
       #endif
@@ -63,12 +66,14 @@ void readButtonState(uint8_t buttonPin, uint8_t *buttonStateReturn) {
     if (buttonState == LOW && buttonStatePrevious == HIGH) {
       buttonStatePrevious = LOW;
       buttonStateLongPress = false;
+      *buttonFlag = 0;
       #if (SERIAL_DEBUGGING_ENABLE == 1)
       Serial.println("Button released");
       #endif
       //shortpress
       if (!buttonStateLongPress && buttonPressDuration < minButtonLongPressDuration) {
         *buttonStateReturn = 1;
+        //*buttonFlag = 0;
         #if (SERIAL_DEBUGGING_ENABLE == 1)
         Serial.println("Button pressed shortly"); 
         #endif 
